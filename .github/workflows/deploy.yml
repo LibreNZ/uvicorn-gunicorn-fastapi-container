@@ -61,6 +61,6 @@ jobs:
           file: docker-images/${{ matrix.image.name }}.dockerfile
           build-args: GIT_URL=${{ github.repositoryUrl }}
           tags: |
-            ${{ env.REGISTRY }}/${{ env.REPO_SOURCE }}/uvicorn-gunicorn:${{ matrix.image.name }}-${{ env.CI_GITHUB_SHA_SHORT }}
-            ${{ env.REGISTRY }}/${{ env.REPO_SOURCE }}/uvicorn-gunicorn:${{ matrix.image.name }}-latest
+            ${{ env.REGISTRY }}/${{ env.REPO_SOURCE }}/uvicorn-gunicorn-fastapi:${{ matrix.image.name }}-${{ env.CI_GITHUB_SHA_SHORT }}
+            ${{ env.REGISTRY }}/${{ env.REPO_SOURCE }}/uvicorn-gunicorn-fastapi:${{ matrix.image.name }}-latest
 

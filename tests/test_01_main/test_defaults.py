@@ -46,7 +46,7 @@ def verify_container(container: DockerClient, response_text: str) -> None:
 
 def test_defaults() -> None:
     name = os.getenv("NAME")
-    image = f"tiangolo/uvicorn-gunicorn-fastapi:{name}"
+    image = f"ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi:{name}"
     response_text = get_response_text1()
     sleep_time = int(os.getenv("SLEEP_TIME", 1))
     remove_previous_container(client)
