@@ -11,43 +11,66 @@ jobs:
     strategy:
       matrix:
         image:
-          - name: latest
-            python_version: "3.9"
+          - name: python3.10
+            python_version: "3.10"
           - name: python3.9
             python_version: "3.9"
           - name: python3.8
             python_version: "3.8"
-          - name: python3.7
-            python_version: "3.7"
-          - name: python3.6
-            python_version: "3.6"
-          - name: python3.9-slim
-            python_version: "3.9"
           - name: python3.8-slim
             python_version: "3.8"
-          - name: python3.9-alpine3.14
+          - name: python3.9-slim
             python_version: "3.9"
-          - name: python3.8-alpine3.10
-            python_version: "3.8"
-          - name: python3.7-alpine3.8
-            python_version: "3.7"
-          - name: python3.6-alpine3.8
-            python_version: "3.6"
+          - name: python3.10-slim
+            python_version: "3.10"
       fail-fast: true
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.7"
+          python-version: "3.10"
       - name: Install Dependencies
-        run: python3.7 -m pip install "docker>=4.4.4,<5.0.0" "pytest>=6.2.4,<7.0.0"
-      - name: Deploy Image
-        run: bash scripts/build-push.sh
+        run: python -m pip install "docker>=4.4.4,<5.0.0" "pytest>=6.2.4,<7.0.0"
+
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v4
+        with:
+          prefix: CI_
+
+      - name: set lower case owner name
+        run: |
+          echo "REPO_SOURCE=${REPO,,}" >>${GITHUB_ENV}
         env:
-          NAME: ${{ matrix.image.name }}
-          DOCKERFILE: ${{ matrix.image.dockerfile }}
-          PYTHON_VERSION: ${{ matrix.image.python_version }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          OWNER: '${{ github.repository_owner }}'
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build images
+        uses: docker/build-push-action@v3
+        with:
+          context: docker-images/
+          push: ${{ github.event_name != 'pull_request' }}
+          file: docker-images/${{ matrix.image.name }}.dockerfile
+          build-args: GIT_URL=${{ github.repositoryUrl }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.REPO_SOURCE }}/uvicorn-gunicorn:${{ matrix.image.name }}-${{ env.CI_GITHUB_SHA_SHORT }}
+            ${{ env.REGISTRY }}/${{ env.REPO_SOURCE }}/uvicorn-gunicorn:${{ matrix.image.name }}-latest
+
+      # - name: Deploy Image
+      #   run: bash scripts/build-push.sh
+      #   env:
+      #     NAME: ${{ matrix.image.name }}
+      #     DOCKERFILE: ${{ matrix.image.dockerfile }}
+      #     PYTHON_VERSION: ${{ matrix.image.python_version }}
+      #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

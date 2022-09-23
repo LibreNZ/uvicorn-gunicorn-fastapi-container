@@ -1,6 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn:python3.8
-
-LABEL maintainer="Sebastian Ramirez <tiangolo@gmail.com>"
+FROM ghcr.io/librenz/uvicorn-gunicorn-container/uvicorn-gunicorn:python3.8-latest
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
