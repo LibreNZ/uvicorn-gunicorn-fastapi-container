@@ -1,4 +1,4 @@
-FROM ghcr.io/librenz/uvicorn-gunicorn-container/uvicorn-gunicorn:python3.9-slim-latest
+FROM ghcr.io/librenz/uvicorn-gunicorn-container/uvicorn-gunicorn:python3.12-latest
 
 ARG GIT_URL=local
 LABEL org.opencontainers.image.source=$GIT_URL
