@@ -2,25 +2,15 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-* [`python3.9`, `latest` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.9.dockerfile)
-* [`python3.8`, _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.8.dockerfile)
-* [`python3.7`, _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.7.dockerfile)
-* [`python3.6` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.6.dockerfile)
-* [`python3.9-slim` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.9-slim.dockerfile)
-* [`python3.8-slim` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.8-slim.dockerfile)
-
-## Discouraged tags
-
-* [`python3.9-alpine3.14` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.9-alpine3.14.dockerfile)
-* [`python3.8-alpine3.10` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.8-alpine3.10.dockerfile)
-* [`python3.7-alpine3.8` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.7-alpine3.8.dockerfile)
-* [`python3.6-alpine3.8` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.6-alpine3.8.dockerfile)
-
-To learn more about why Alpine images are discouraged for Python read the note at the end: [🚨 Alpine Python Warning](#-alpine-python-warning).
+* [`python3.12`, `latest` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.12.dockerfile)
+* [`python3.11`, _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.11.dockerfile)
+* [`python3.10`, _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.10.dockerfile)
+* [`python3.12-slim` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.12-slim.dockerfile)
+* [`python3.11-slim` _(Dockerfile)_](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/blob/master/docker-images/python3.11-slim.dockerfile)
 
 ---
 
-**Note**: There are [tags for each build date](ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi/tags). If you need to "pin" the Docker image version you use, you can select one of those tags. E.g. `ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi:python3.7-2019-10-15`.
+**Note**: There are [tags for each build date](ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi/tags). If you need to "pin" the Docker image version you use, you can select one of those tags. E.g. `ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi:python3.10-2019-10-15`.
 
 # uvicorn-gunicorn-fastapi
 
@@ -38,15 +28,9 @@ The achievable performance is on par with (and in many cases superior to) **Go**
 
 This image has an **auto-tuning** mechanism included to start a number of worker processes based on the available CPU cores. That way you can just add your code and get **high performance** automatically, which is useful in **simple deployments**.
 
-## 🚨 WARNING: You Probably Don't Need this Docker Image
-
-You are probably using **Kubernetes** or similar tools. In that case, you probably **don't need this image** (or any other **similar base image**). You are probably better off **building a Docker image from scratch** as explained in the docs for [FastAPI in Containers - Docker: Build a Docker Image for FastAPI](https://fastapi.tiangolo.com/deployment/docker/#replication-number-of-processes).
-
 ---
 
-If you have a cluster of machines with **Kubernetes**, Docker Swarm Mode, Nomad, or other similar complex system to manage distributed containers on multiple machines, then you will probably want to **handle replication** at the **cluster level** instead of using a **process manager** (like Gunicorn with Uvicorn workers) in each container, which is what this Docker image does.
-
-In those cases (e.g. using Kubernetes) you would probably want to build a **Docker image from scratch**, installing your dependencies, and running **a single Uvicorn process** instead of this image.
+In some cases (e.g. using Kubernetes) you would probably want to build a **Docker image from scratch**, installing your dependencies, and running **a single Uvicorn process** instead of this image.
 
 For example, your `Dockerfile` could look like:
 
@@ -128,192 +112,6 @@ The key features are:
 This image will set a sensible configuration based on the server it is running on (the amount of CPU cores available) without making sacrifices.
 
 It has sensible defaults, but you can configure it with environment variables or override the configuration files.
-
-There is also a slim version and another one based on Alpine Linux. If you want one of those, use one of the tags from above.
-
-### `tiangolo/uvicorn-gunicorn`
-
-This image (`ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi`) is based on [**tiangolo/uvicorn-gunicorn**](https://github.com/tiangolo/uvicorn-gunicorn-docker).
-
-That image is what actually does all the work.
-
-This image just installs FastAPI and has the documentation specifically targeted at FastAPI.
-
-If you feel confident about your knowledge of Uvicorn, Gunicorn and ASGI, you can use that image directly.
-
-### `tiangolo/uvicorn-gunicorn-starlette`
-
-There is a sibling Docker image: [**tiangolo/uvicorn-gunicorn-starlette**](https://github.com/tiangolo/uvicorn-gunicorn-starlette-docker)
-
-If you are creating a new [**Starlette**](https://www.starlette.io/) web application and you want to discard all the additional features from FastAPI you should use [**tiangolo/uvicorn-gunicorn-starlette**](https://github.com/tiangolo/uvicorn-gunicorn-starlette-docker) instead.
-
-**Note**: FastAPI is based on Starlette and adds several features on top of it. Useful for APIs and other cases: data validation, data conversion, documentation with OpenAPI, dependency injection, security/authentication and others.
-
-## How to use
-
-You don't need to clone the GitHub repo.
-
-You can use this image as a base image for other images.
-
-Assuming you have a file `requirements.txt`, you could have a `Dockerfile` like this:
-
-```Dockerfile
-FROM ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi:python3.9
-
-COPY ./requirements.txt /app/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
-
-COPY ./app /app
-```
-
-It will expect a file at `/app/app/main.py`.
-
-Or otherwise a file at `/app/main.py`.
-
-And will expect it to contain a variable `app` with your FastAPI application.
-
-Then you can build your image from the directory that has your `Dockerfile`, e.g:
-
-```bash
-docker build -t myimage ./
-```
-
-## Quick Start
-
-### Build your Image
-
-* Go to your project directory.
-* Create a `Dockerfile` with:
-
-```Dockerfile
-FROM ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi:python3.9
-
-COPY ./requirements.txt /app/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
-
-COPY ./app /app
-```
-
-* Create an `app` directory and enter in it.
-* Create a `main.py` file with:
-
-```Python
-from fastapi import FastAPI
-
-app = FastAPI()
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
-```
-
-* You should now have a directory structure like:
-
-```
-.
-├── app
-│   └── main.py
-└── Dockerfile
-```
-
-* Go to the project directory (in where your `Dockerfile` is, containing your `app` directory).
-* Build your FastAPI image:
-
-```bash
-docker build -t myimage .
-```
-
-* Run a container based on your image:
-
-```bash
-docker run -d --name mycontainer -p 80:80 myimage
-```
-
-Now you have an optimized FastAPI server in a Docker container. Auto-tuned for your current server (and number of CPU cores).
-
-### Check it
-
-You should be able to check it in your Docker container's URL, for example: <a href="http://192.168.99.100/items/5?q=somequery" target="_blank">http://192.168.99.100/items/5?q=somequery</a> or <a href="http://127.0.0.1/items/5?q=somequery" target="_blank">http://127.0.0.1/items/5?q=somequery</a> (or equivalent, using your Docker host).
-
-You will see something like:
-
-```JSON
-{"item_id": 5, "q": "somequery"}
-```
-
-### Interactive API docs
-
-Now you can go to <a href="http://192.168.99.100/docs" target="_blank">http://192.168.99.100/docs</a> or <a href="http://127.0.0.1/docs" target="_blank">http://127.0.0.1/docs</a> (or equivalent, using your Docker host).
-
-You will see the automatic interactive API documentation (provided by <a href="https://github.com/swagger-api/swagger-ui" target="_blank">Swagger UI</a>):
-
-![Swagger UI](https://fastapi.tiangolo.com/img/index/index-01-swagger-ui-simple.png)
-
-### Alternative API docs
-
-And you can also go to <a href="http://192.168.99.100/redoc" target="_blank">http://192.168.99.100/redoc</a> or <a href="http://127.0.0.1/redoc" target="_blank">http://127.0.0.1/redoc</a>(or equivalent, using your Docker host).
-
-You will see the alternative automatic documentation (provided by <a href="https://github.com/Rebilly/ReDoc" target="_blank">ReDoc</a>):
-
-![ReDoc](https://fastapi.tiangolo.com/img/index/index-02-redoc-simple.png)
-
-## Dependencies and packages
-
-You will probably also want to add any dependencies for your app and pin them to a specific version, probably including Uvicorn, Gunicorn, and FastAPI.
-
-This way you can make sure your app always works as expected.
-
-You could install packages with `pip` commands in your `Dockerfile`, using a `requirements.txt`, or even using [Poetry](https://python-poetry.org/).
-
-And then you can upgrade those dependencies in a controlled way, running your tests, making sure that everything works, but without breaking your production application if some new version is not compatible.
-
-### Using Poetry
-
-Here's a small example of one of the ways you could install your dependencies making sure you have a pinned version for each package.
-
-Let's say you have a project managed with [Poetry](https://python-poetry.org/), so, you have your package dependencies in a file `pyproject.toml`. And possibly a file `poetry.lock`.
-
-Then you could have a `Dockerfile` using Docker multi-stage building with:
-
-```Dockerfile
-FROM python:3.9 as requirements-stage
-
-WORKDIR /tmp
-
-RUN pip install poetry
-
-COPY ./pyproject.toml ./poetry.lock* /tmp/
-
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
-
-FROM ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi:python3.9
-
-COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
-
-COPY ./app /app
-```
-
-That will:
-
-* Install poetry and configure it for running inside of the Docker container.
-* Copy your application requirements.
-    * Because it uses `./poetry.lock*` (ending with a `*`), it won't crash if that file is not available yet.
-* Install the dependencies.
-* Then copy your app code.
-
-It's important to copy the app code *after* installing the dependencies, that way you can take advantage of Docker's cache. That way it won't have to install everything from scratch every time you update your application files, only when you add new dependencies.
-
-This also applies for any other way you use to install your dependencies. If you use a `requirements.txt`, copy it alone and install all the dependencies on the top of the `Dockerfile`, and add your app code after it.
 
 ## Advanced usage
 
@@ -736,84 +534,6 @@ But these environment variables will work the same as described above:
 * `HOST`
 * `PORT`
 * `LOG_LEVEL`
-
-## 🚨 Alpine Python Warning
-
-In short: You probably shouldn't use Alpine for Python projects, instead use the `slim` Docker image versions.
-
----
-
-Do you want more details? Continue reading 👇
-
-Alpine is more useful for other languages where you build a static binary in one Docker image stage (using multi-stage Docker building) and then copy it to a simple Alpine image, and then just execute that binary. For example, using Go.
-
-But for Python, as Alpine doesn't use the standard tooling used for building Python extensions, when installing packages, in many cases Python (`pip`) won't find a precompiled installable package (a "wheel") for Alpine. And after debugging lots of strange errors you will realize that you have to install a lot of extra tooling and build a lot of dependencies just to use some of these common Python packages. 😩
-
-This means that, although the original Alpine image might have been small, you end up with a an image with a size comparable to the size you would have gotten if you had just used a standard Python image (based on Debian), or in some cases even larger. 🤯
-
-And in all those cases, it will take much longer to build, consuming much more resources, building dependencies for longer, and also increasing its carbon footprint, as you are using more CPU time and energy for each build. 🌳
-
-If you want slim Python images, you should instead try and use the `slim` versions that are still based on Debian, but are smaller. 🤓
-
-## Tests
-
-All the image tags, configurations, environment variables and application options are tested.
-
-## Release Notes
-
-### Latest Changes
-
-* 📝 Add note to discourage Alpine with Python. PR [#122](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/122) by [@tiangolo](https://github.com/tiangolo).
-* 📝 Add warning for Kubernetes, when to use this image. PR [#121](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/121) by [@tiangolo](https://github.com/tiangolo).
-* ✏ Fix typo, repeated word on README. PR [#96](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/96) by [@shelbylsmith](https://github.com/shelbylsmith).
-* 📌 Add external dependencies and Dependabot to get automatic upgrade PRs. PR [#109](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/109) by [@tiangolo](https://github.com/tiangolo).
-* ✨ Add Python 3.9 and Python 3.9 Alpine. PR [#67](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/67) by [@graue70](https://github.com/graue70).
-* 👷 Update Latest Changes. PR [#108](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/108) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Allow GitHub workflow dispatch to trigger test and deploy. PR [#93](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/93) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Add latest-changes GitHub action, update issue-manager, add funding. PR [#70](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/70) by [@tiangolo](https://github.com/tiangolo).
-### 0.6.0
-
-* Add docs about installing and pinning dependencies. PR [#41](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/41).
-* Add `slim` version. PR [#40](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/40).
-* Update and refactor bringing all the new features from the base image. Includes:
-    * Centralize, simplify, and deduplicate code and setup
-    * Move CI to GitHub actions
-    * Add Python 3.8 (and Alpine)
-    * Add new configs and docs:
-        * `WORKER_CLASS`
-        * `TIMEOUT`
-        * `KEEP_ALIVE`
-        * `GRACEFUL_TIMEOUT`
-        * `ACCESS_LOG`
-        * `ERROR_LOG`
-        * `GUNICORN_CMD_ARGS`
-        * `MAX_WORKERS`
-    * PR [#39](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/39).
-* Disable pip cache during installation. PR [#38](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/38).
-* Migrate local development from Pipenv to Poetry. PR [#34](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/34).
-* Add docs for custom `PRE_START_PATH` env var. PR [#33](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/33).
-
-### 0.5.0
-
-* Refactor tests to use env vars and add image tags for each build date, like `ghcr.io/librenz/uvicorn-gunicorn-fastapi-container/uvicorn-gunicorn-fastapi:python3.7-2019-10-15`. PR [#17](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/17).
-* Upgrade Travis. PR [#9](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/9).
-
-### 0.4.0
-
-* Add support for live auto-reload with an additional custom script `/start-reload.sh`, check the [updated documentation](https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container#development-live-reload). PR <a href="https://github.com/tiangolo/uvicorn-gunicorn-docker/pull/6" target="_blank">#6</a> in parent image.
-
-### 0.3.0
-
-* Set `WORKERS_PER_CORE` by default to `1`, as it shows to have the best performance on benchmarks.
-* Make the default web concurrency, when `WEB_CONCURRENCY` is not set, to a minimum of 2 workers. This is to avoid bad performance and blocking applications (server application) on small machines (server machine/cloud/etc). This can be overridden using `WEB_CONCURRENCY`. This applies for example in the case where `WORKERS_PER_CORE` is set to `1` (the default) and the server has only 1 CPU core. PR <a href="https://github.com/LibreNZ/uvicorn-gunicorn-fastapi-container/pull/6" target="_blank">#6</a> and PR <a href="https://github.com/tiangolo/uvicorn-gunicorn-docker/pull/5" target="_blank">#5</a> in parent image.
-
-### 0.2.0
-
-* Make `/start.sh` run independently, reading and generating used default environment variables. And remove `/entrypoint.sh` as it doesn't modify anything in the system, only reads environment variables. PR <a href="https://github.com/tiangolo/uvicorn-gunicorn-docker/pull/4" target="_blank">#4</a> in parent image.
-
-### 0.1.0
-
-* Add support for `/app/prestart.sh`.
 
 ## License
 
